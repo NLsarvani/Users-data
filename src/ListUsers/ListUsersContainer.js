@@ -34,7 +34,7 @@ class ListUsersContainer extends React.Component {
   }
 
   getUserData = () => {
-    axios.get("http://localhost:3001/users").then((response) => {
+    axios.get("http://localhost:4000/users").then((response) => {
       this.setState({
         data: response.data[0],
       });

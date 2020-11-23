@@ -10,6 +10,10 @@ class AddUserContainer extends React.Component {
   all_countries = Object.keys(countries["countries"]);
   all_states = countries["countries"];
 
+  state = {
+    states: [],
+  };
+
   componentDidMount = () => {
     console.log(this.props.data);
     this.validator = new SimpleReactValidator();
@@ -28,26 +32,26 @@ class AddUserContainer extends React.Component {
       state: state,
     };
 
-    // Push the user and close the modal window
-    addUser(newUser);
-    toggleModal();
+    // post user details to the api to store in data
+    axios.post("http://localhost:4000/users", newUser).then((response) => {
+      if (response.status === 200) {
+        // Push the user and close the modal window
+        addUser(response.data);
+        toggleModal();
+      }
+    });
   };
 
   selectCountry = (value) => {
     // const { country, all_states, state } = this.props.data;
-    this.setState(
-      {
-        country: value,
-        all_states: this.all_states[value],
-        state: this.all_states[value][0],
-      },
-      () => {
-        console.log(this.props.data);
-      }
-    );
+    this.setState({
+      country: value,
+      states: this.all_states[value],
+      state: this.all_states[value][0],
+    });
   };
   selectState = (value) => {
-    console.log(this.props.data);
+    // console.log(this.props.data);
     // const { state } = this.state;
     this.setState({
       state: value,
@@ -55,16 +59,18 @@ class AddUserContainer extends React.Component {
   };
 
   handleInput = (event) => {
-    console.log(this.props.data);
+    // console.log(this.props.data);
 
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    console.log(this.props.data);
+    // console.log(this.props.data);
   };
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     const { toggleModal } = this.props;
+    const { states } = this.state;
+
     return (
       <div>
         <AddUser
@@ -74,6 +80,7 @@ class AddUserContainer extends React.Component {
           handleInput={this.handleInput}
           selectCountry={this.selectCountry}
           selectState={this.selectState}
+          states={states}
         />
       </div>
     );
