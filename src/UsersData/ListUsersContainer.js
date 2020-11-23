@@ -105,10 +105,19 @@ class ListUsersContainer extends React.Component {
       ),
     },
   ];
+  showModal = () => {
+    console.log(this.props);
+    this.setState({
+      visible: true,
+    });
+  };
 
   render() {
     return (
       <div>
+        <Button className="adduser" type="primary" onClick={this.showModal}>
+          Add User
+        </Button>
         <AddUserContainer data={this.state} />
         {/* <AddUser
           showModal={this.showModal}

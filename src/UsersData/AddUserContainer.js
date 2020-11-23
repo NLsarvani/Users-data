@@ -92,14 +92,6 @@ class AddUserContainer extends React.Component {
     this.setState({ validator });
   };
 
-  showModal = () => {
-    console.log(this.props);
-    this.props.data.visible = true;
-    // this.setState({
-    //   visible: true,
-    // });
-  };
-
   selectCountry = (value) => {
     this.setState({
       country: value,
@@ -132,11 +124,7 @@ class AddUserContainer extends React.Component {
   render() {
     return (
       <div>
-        <Button className="adduser" type="primary" onClick={this.showModal}>
-          Add User
-        </Button>
         <AddUser
-          showModal={this.showModal}
           handleOk={this.handleOk}
           data={this.props.data}
           handleCancel={this.handleCancel}
