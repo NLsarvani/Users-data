@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import UsersDataContainer from "./UsersData/UsersDataContainer";
+import ListUsersContainer from "./UsersData/ListUsersContainer";
 
-ReactDOM.render(<UsersDataContainer />, document.getElementById("root"));
-
+ReactDOM.render(<ListUsersContainer />, document.getElementById("root"));
