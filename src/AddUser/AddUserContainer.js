@@ -23,7 +23,7 @@ class AddUserContainer extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props);
+    // console.log(this.props);
   }
   componentDidMount = () => {
     this.validator = new SimpleReactValidator();
@@ -33,6 +33,7 @@ class AddUserContainer extends React.Component {
 
   handleOk = (e) => {
     const { fname, lname, email, data, country, state } = this.state;
+    const { toggleModal } = this.props;
     // if ((this.state.userInput !== "") & (this.state.createdValue === "")) {
     // if (this.state.userInput !== "" && this.state.createdValue === "") {
     const newUser = {
@@ -50,11 +51,16 @@ class AddUserContainer extends React.Component {
     //     // userInput: "",
     //     // createdValue: "",
     // });
+
+    // Push the user and close the modal window
+    // addUser(newUser)
+    // toggleModal();
+
     axios
-      .post("http://localhost:3001/users", newUser)
+      .post("http://localhost:4000/users", newUser)
       .then((response) => {
-        console.log(data);
-        console.log(response.data);
+        // console.log(data);
+        // console.log(response.data);
         // if (response.request.status) {
         data.push(newUser);
         this.setState({
@@ -81,24 +87,24 @@ class AddUserContainer extends React.Component {
     // }
   };
 
-  handleCancel = (e) => {
-    this.setState({
-      // visible: false,
-    });
-  };
+  // handleCancel = (e) => {
+  //   this.setState({
+  //     // visible: false,
+  //   });
+  // };
 
   componentDidMount = () => {
     const validator = new SimpleReactValidator();
     this.setState({ validator });
   };
 
-  showModal = () => {
-    console.log(this.props);
-    this.props.data.visible = true;
-    // this.setState({
-    //   visible: true,
-    // });
-  };
+  // showModal = () => {
+  //   console.log(this.props);
+  //   this.props.data.visible = true;
+  //   // this.setState({
+  //   //   visible: true,
+  //   // });
+  // };
 
   selectCountry = (value) => {
     this.setState({
@@ -112,11 +118,6 @@ class AddUserContainer extends React.Component {
       state: value,
     });
   };
-  onBlur = () => {};
-
-  onFocus = (value) => {};
-
-  onSearch = (val) => {};
 
   addFirstName = (event) => {
     const { name, value } = event.target;
@@ -124,25 +125,23 @@ class AddUserContainer extends React.Component {
     // console.log(newTaskObj)
   };
 
-  handleCancel = (e) => {
-    this.setState({
-      visible: false,
-    });
-  };
+  // handleCancel = (e) => {
+  //   this.setState({
+  //     visible: false,
+  //   });
+  // };
   render() {
+    const { toggleModal } = this.props;
     return (
       <div>
-        <Button className="adduser" type="primary" onClick={this.showModal}>
-          Add User
-        </Button>
         <AddUser
-          showModal={this.showModal}
+          toggleModal={toggleModal}
           handleOk={this.handleOk}
           data={this.props.data}
-          handleCancel={this.handleCancel}
+          // handleCancel={this.handleCancel}
           addFirstName={this.addFirstName}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
+          // onBlur={this.onBlur}
+          // onFocus={this.onFocus}
           selectCountry={this.selectCountry}
           selectState={this.selectState}
         />

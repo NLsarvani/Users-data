@@ -7,9 +7,9 @@ import SimpleReactValidator from "simple-react-validator";
 import "antd/dist/antd.css";
 
 import ListUsers from "./ListUsers";
-import AddUser from "./AddUser";
+// import AddUser from "./AddUser/AddUser";
 import countries from "../countries.json";
-import AddUserContainer from "./AddUserContainer";
+import AddUserContainer from "../AddUser/AddUserContainer";
 
 class ListUsersContainer extends React.Component {
   all_countries = Object.keys(countries["countries"]);
@@ -39,7 +39,7 @@ class ListUsersContainer extends React.Component {
   // };
 
   getUserData = () => {
-    axios.get("http://localhost:3001/users").then((response) => {
+    axios.get("http://localhost:4000/users").then((response) => {
       this.setState({
         data: response.data[0],
       });
@@ -52,6 +52,16 @@ class ListUsersContainer extends React.Component {
     // console.log("zxcvbn------->", zxcvbn("root#jumperworld@1987.com"));
     // console.log("this.validator -->", this.Validator);
   };
+
+  toggleModal = () => {
+    const { visible } = this.state;
+    this.setState({ visible: !visible });
+  };
+
+  addUser = (newUser) => {
+    // Push newly created user to array of users in state.
+  };
+
   columns = [
     {
       title: "S.No. ",
@@ -109,7 +119,7 @@ class ListUsersContainer extends React.Component {
   render() {
     return (
       <div>
-        <AddUserContainer data={this.state} />
+        <AddUserContainer data={this.state} toggleModal={this.toggleModal} />
         {/* <AddUser
           showModal={this.showModal}
           addFirstName={this.addFirstName}
@@ -118,8 +128,11 @@ class ListUsersContainer extends React.Component {
           selectCountry={this.selectCountry}
           selectState={this.selectState}
         /> */}
-
-        <ListUsers columns={this.columns} data={this.state.data} />
+        <ListUsers
+          columns={this.columns}
+          data={this.state.data}
+          toggleModal={this.toggleModal}
+        />
         {/* <Table columns={this.columns} dataSource={this.state.data} rowKey="_id"
                     pagination={{ position: ['topRight'] }} /> */}
       </div>

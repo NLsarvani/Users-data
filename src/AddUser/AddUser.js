@@ -16,16 +16,16 @@ class AddUser extends React.Component {
 
   render() {
     const { Option } = Select;
-    const { data, handleOk, handleCancel } = this.props;
-    console.log(data);
-    console.log(this.validator.getErrorMessages());
+    const { data, handleOk, toggleModal } = this.props;
+    // console.log(data);
+    // console.log(this.validator.getErrorMessages());
     return (
       <div>
         <Modal
           title="Basic Modal"
           visible={data.visible}
           onOk={handleOk}
-          onCancel={handleCancel}
+          onCancel={toggleModal}
         >
           <div className="form-group">
             <Input
@@ -85,8 +85,6 @@ class AddUser extends React.Component {
               optionFilterProp="children"
               defaultValue={this.props.data.country}
               onChange={this.props.selectCountry}
-              onFocus={this.props.onFocus}
-              onBlur={this.props.onBlur}
               onSearch={this.props.onSearch}
               style={{ width: "100%" }}
             >
