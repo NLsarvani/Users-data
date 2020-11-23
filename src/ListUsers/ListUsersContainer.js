@@ -7,9 +7,9 @@ import SimpleReactValidator from "simple-react-validator";
 import "antd/dist/antd.css";
 
 import ListUsers from "./ListUsers";
-import AddUser from "./AddUser";
+// import AddUser from "./AddUser/AddUser";
 import countries from "../countries.json";
-import AddUserContainer from "./AddUserContainer";
+import AddUserContainer from "../AddUser/AddUserContainer";
 
 class ListUsersContainer extends React.Component {
   all_countries = Object.keys(countries["countries"]);
@@ -32,11 +32,6 @@ class ListUsersContainer extends React.Component {
     this.getUserData();
     // this.validator = new SimpleReactValidator();
   }
-  // handleCancel = (e) => {
-  //   this.setState({
-  //     visible: false,
-  //   });
-  // };
 
   getUserData = () => {
     axios.get("http://localhost:3001/users").then((response) => {
@@ -45,13 +40,49 @@ class ListUsersContainer extends React.Component {
       });
     });
   };
-  // }
-  componentDidMount = () => {
-    const validator = new SimpleReactValidator();
-    this.setState({ validator });
-    // console.log("zxcvbn------->", zxcvbn("root#jumperworld@1987.com"));
-    // console.log("this.validator -->", this.Validator);
+
+  toggleModal = () => {
+    const { visible } = this.state;
+    this.setState({ visible: !visible });
   };
+
+  addUser = (newUser) => {
+    console.log(this.state);
+    console.log(newUser);
+    // Push newly created user to array of users in state.
+
+    //   axios
+    //     .post("http://localhost:3001/users", newUser)
+    //     .then((response) => {
+    //       // console.log(data);
+    //       // console.log(response.data);
+    //       // if (response.request.status) {
+    //       data.push(newUser);
+    //       this.setState({
+    //         data: data,
+    //         fname: "",
+    //         lname: "",
+    //         email: "",
+    //         all_countries: this.all_countries,
+    //         all_states: this.all_states[this.all_countries[0]],
+    //         country: this.all_countries[0],
+    //         state: this.all_states[this.all_countries[0]][0],
+    //         // visible: false,
+    //       });
+    //       // }
+    //     })
+    //     .catch((response) => {
+    //       console.log(response);
+    //     });
+    //   // } else {
+    //   //   this.validator.showMessages();
+    //   //   // rerender to show messages for the first time
+    //   //   // you can use the autoForceUpdate option to do this automatically`
+    //   //   this.forceUpdate();
+    //   // }
+    // };
+  };
+
   columns = [
     {
       title: "S.No. ",
@@ -115,22 +146,16 @@ class ListUsersContainer extends React.Component {
   render() {
     return (
       <div>
-        <Button className="adduser" type="primary" onClick={this.showModal}>
-          Add User
-        </Button>
-        <AddUserContainer data={this.state} />
-        {/* <AddUser
-          showModal={this.showModal}
-          addFirstName={this.addFirstName}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          selectCountry={this.selectCountry}
-          selectState={this.selectState}
-        /> */}
-
-        <ListUsers columns={this.columns} data={this.state.data} />
-        {/* <Table columns={this.columns} dataSource={this.state.data} rowKey="_id"
-                    pagination={{ position: ['topRight'] }} /> */}
+        <AddUserContainer
+          data={this.state}
+          toggleModal={this.toggleModal}
+          addUser={this.addUser}
+        />
+        <ListUsers
+          columns={this.columns}
+          data={this.state.data}
+          toggleModal={this.toggleModal}
+        />
       </div>
     );
   }

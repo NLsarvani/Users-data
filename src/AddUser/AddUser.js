@@ -16,39 +16,50 @@ class AddUser extends React.Component {
 
   render() {
     const { Option } = Select;
-    const { data, handleOk, handleCancel } = this.props;
+    const {
+      data,
+      handleOk,
+      toggleModal,
+      handleInput,
+      selectCountry,
+      selectState,
+    } = this.props;
+    const {
+      country,
+      fname,
+      lname,
+      all_countries,
+      all_states,
+      state,
+    } = this.props.data;
     console.log(data);
-    console.log(this.validator.getErrorMessages());
+    console.log(country, fname, lname, all_countries, all_states, state);
     return (
       <div>
         <Modal
           title="Basic Modal"
           visible={data.visible}
           onOk={handleOk}
-          onCancel={handleCancel}
+          onCancel={toggleModal}
         >
           <div className="form-group">
             <Input
               className="form-control"
               placeholder="Add First Name"
               name="fname"
-              onChange={this.props.addFirstName}
-              value={this.props.data.fname}
+              onChange={handleInput}
+              // value={data.fname}
               // onKeyDown={this.props.onKeyDown}
             />
-            {this.validator.message(
-              "title",
-              this.props.fname,
-              "required|alpha"
-            )}
+            {this.validator.message("title", fname, "required|alpha")}
           </div>
           <div className="form-group">
             <Input
               placeholder="Add Last Name"
               name="lname"
-              onChange={this.props.addFirstName}
+              onChange={handleInput}
               // onChange={this.props.addTask}
-              // value={this.props.data.userInput}
+              // value={lname}
               // onKeyDown={this.props.onKeyDown}
             />
           </div>
@@ -56,55 +67,33 @@ class AddUser extends React.Component {
             <Input
               placeholder="Add Email"
               name="email"
-              onChange={this.props.addFirstName}
+              onChange={handleInput}
               // onChange={this.props.addTask}
               //   value={this.props.data.email}
               //   validator={this.props.validator}
-              // onKeyDown={this.props.onKeyDown}
             />
-            {this.validator.message(
-              "email",
-              this.props.data.email,
-              "required|email",
-              { className: "text-danger" }
-            )}
-
-            {/* <label>Address Line 1</label>
-                        <input className="form-control" /> */}
-            {/* {this.validator.message('title', this.state.title, 'required|alpha')} */}
           </div>
           <div className="form-group">
-            {/* <Select defaultValue={provinceData[0]} style={{ width: 120 }} onChange={handleProvinceChange}>
-        {provinceData.map(province => (
-          <Option key={province}>{province}</Option>
-        ))}
-      </Select> */}
             <Select
               showSearch
               placeholder="Select a person"
               optionFilterProp="children"
-              defaultValue={this.props.data.country}
-              onChange={this.props.selectCountry}
-              onFocus={this.props.onFocus}
-              onBlur={this.props.onBlur}
-              onSearch={this.props.onSearch}
+              defaultValue={country}
+              onChange={selectCountry}
               style={{ width: "100%" }}
             >
-              {/* countries.map((country)=>{
-
-                            }) */}
-              {this.props.data.all_countries.map((country) => (
+              {data.all_countries.map((country) => (
                 <Option key={country}>{country}</Option>
               ))}
             </Select>
           </div>
           <div className="form-group">
             <Select
-              onChange={this.props.selectState}
-              defaultValue={this.props.data.state}
+              onChange={selectState}
+              defaultValue={state}
               style={{ width: "100%" }}
             >
-              {this.props.data.all_states.map((city) => (
+              {all_states.map((city) => (
                 <Option key={city}>{city}</Option>
               ))}
             </Select>

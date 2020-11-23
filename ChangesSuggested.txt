@@ -1,0 +1,14 @@
+=============== Good ==================
+1) Use of object destructuring
+2) arrow function
+
+=============== Need improvement ==================
+1) Component naming should be intuitive
+Ex : 1) UserData component should have name ListUsers
+     2) UserModal should have name AddUser
+2) Add error handling and show errors in UI for axios request and other places
+3) addFirstName method is too confusing/wrong, It should be handleInputChange or onInputChange
+4) Use object destructuring everywhere
+5) Form in modal is not well formed, It should look nice like shown in antd docs
+6) Select dropdown in add form should be same with as other elements in form so it looks nice
+7) Add widths to table columns so they dont seem fluctuating while page change
