@@ -11,76 +11,88 @@ class AddUserContainer extends React.Component {
   all_states = countries["countries"];
 
   state = {
-    states: [],
+    fname: "",
+    lname: "",
+    email: "",
+    all_countries: this.all_countries,
+    states: this.all_states[this.all_countries[0]],
+    country: this.all_countries[0],
+    state: this.all_states[this.all_countries[0]][0],
   };
 
-  componentDidMount = () => {
-    console.log(this.props.data);
+  constructor() {
+    super();
     this.validator = new SimpleReactValidator();
-  };
+  }
 
   handleOk = (e) => {
-    console.log(this.props.data);
-    const { fname, lname, email, country, state } = this.state;
-    const { toggleModal, addUser } = this.props;
-    const newUser = {
-      // id: data.length + 1,
-      fname: fname,
-      lname: lname,
-      email: email,
-      country: country,
-      state: state,
-    };
-
-    // post user details to the api to store in data
-    axios.post("http://localhost:4000/users", newUser).then((response) => {
-      if (response.status === 200) {
-        // Push the user and close the modal window
-        addUser(response.data);
-        toggleModal();
-      }
-    });
+    if (this.validator.allValid()) {
+      const { fname, lname, email, country, state } = this.state;
+      const { toggleModal, addUser } = this.props;
+      const newUser = {
+        // id: data.length + 1,
+        fname: fname,
+        lname: lname,
+        email: email,
+        country: country,
+        state: state,
+      };
+      // post user details to the api to store in data
+      axios
+        .post("http://localhost:4000/users", newUser)
+        .then((response) => {
+          if (response.status === 201) {
+            // Push the user and close the modal window
+            let d = addUser(response.data);
+            if (d) {
+              toggleModal();
+            }
+          }
+        })
+        .catch((response) => {
+          console.log(response);
+        });
+    } else {
+      this.validator.showMessages();
+      // rerender to show messages for the first time
+      // you can use the autoForceUpdate option to do this automatically`
+      this.forceUpdate();
+    }
   };
 
   selectCountry = (value) => {
-    // const { country, all_states, state } = this.props.data;
     this.setState({
       country: value,
       states: this.all_states[value],
       state: this.all_states[value][0],
     });
   };
+
   selectState = (value) => {
-    // console.log(this.props.data);
-    // const { state } = this.state;
     this.setState({
       state: value,
     });
   };
 
   handleInput = (event) => {
-    // console.log(this.props.data);
-
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    // console.log(this.props.data);
   };
 
   render() {
-    // console.log(this.props);
     const { toggleModal } = this.props;
-    const { states } = this.state;
-
     return (
       <div>
         <AddUser
           toggleModal={toggleModal}
           handleOk={this.handleOk}
-          data={this.props.data}
+          data={this.state}
           handleInput={this.handleInput}
           selectCountry={this.selectCountry}
           selectState={this.selectState}
-          states={states}
+          visible={this.props.data.visible}
+          validator={this.validator}
+          user_data={this.props.data.user_data}
         />
       </div>
     );

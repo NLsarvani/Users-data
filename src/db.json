@@ -1,15 +1,44 @@
 {
   "users": [
-    [
-      {
-        "id": 1,
-        "fname": "Amanda",
-        "lname": "Anand",
-        "email": "Amanda@gmail.com",
-        "country": "India",
-        "state": "Andhra Pradhesh"
-      }
-    ]
-    
+    {
+      "id": 1,
+      "fname": "Amanda",
+      "lname": "Anand",
+      "email": "Amanda@gmail.com",
+      "country": "India",
+      "state": "Andhra Pradhesh"
+    },
+    {
+      "fname": "Sookmin",
+      "lname": "Lee",
+      "email": "lee@gmail.com",
+      "country": "South Korea",
+      "state": "Cheju",
+      "id": 2
+    },
+    {
+      "fname": "Lakshmi",
+      "lname": "Nimmagadda",
+      "email": "lakshmi@gmail.com",
+      "country": "India",
+      "state": "Andhra Pradesh",
+      "id": 3
+    },
+    {
+      "fname": "testing",
+      "lname": "Last",
+      "email": "last@gamil.com",
+      "country": "Australia",
+      "state": "Auckland",
+      "id": 4
+    },
+    {
+      "fname": "ffinal",
+      "lname": "Nimmagadda",
+      "email": "madhuri@gmail.com",
+      "country": "Australia",
+      "state": "Auckland",
+      "id": 5
+    }
   ]
 }

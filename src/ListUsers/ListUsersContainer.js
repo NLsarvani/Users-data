@@ -2,43 +2,40 @@ import React from "react";
 import axios from "axios";
 import { Button, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import SimpleReactValidator from "simple-react-validator";
 
 import "antd/dist/antd.css";
 
 import ListUsers from "./ListUsers";
-// import AddUser from "./AddUser/AddUser";
-import countries from "../countries.json";
 import AddUserContainer from "../AddUser/AddUserContainer";
 
 class ListUsersContainer extends React.Component {
-  all_countries = Object.keys(countries["countries"]);
-  all_states = countries["countries"];
   state = {
-    fname: "",
-    lname: "",
-    email: "",
-    all_countries: this.all_countries,
-    all_states: this.all_states[this.all_countries[0]],
-    country: this.all_countries[0],
-    state: this.all_states[this.all_countries[0]][0],
+    user_data: {
+      fname: "",
+      lname: "",
+      email: "",
+      country: "",
+      state: "",
+    },
     data: [],
     visible: false,
   };
   usersData = [];
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     this.getUserData();
-    // this.validator = new SimpleReactValidator();
   }
-
   getUserData = () => {
-    axios.get("http://localhost:4000/users").then((response) => {
-      this.setState({
-        data: response.data[0],
+    axios
+      .get("http://localhost:4000/users")
+      .then((response) => {
+        this.setState({
+          data: response.data,
+        });
+      })
+      .catch((response) => {
+        console.log(response);
       });
-    });
   };
 
   toggleModal = () => {
@@ -47,32 +44,43 @@ class ListUsersContainer extends React.Component {
   };
 
   addUser = (newUser) => {
-    console.log(newUser);
     const { data } = this.state;
-    console.log(data);
+    data.push(newUser);
+    this.setState({
+      data,
+    });
+    return true;
+  };
+
+  edit = (e) => {
+    const { visible } = this.state;
+    let { user_data } = this.state;
+    user_data = e;
+    this.setState({
+      user_data,
+      visible: !visible,
+    });
+  };
+
+  onDelete = (user_id) => {
     axios
-      .post("http://localhost:3001/users", newUser)
+      .delete(`http://localhost:4000/users/${user_id}`)
       .then((response) => {
-        console.log(data);
-        // console.log(response.data);
-        if (response.request.status) {
-          data.push(newUser);
-          console.log(data);
+        if (response.status === 200) {
+          const { data } = this.state;
+          // const tasks = [...tasks];
+          const updateData = data.filter((user) => user.id !== user_id);
           this.setState({
-            data,
+            data: updateData,
           });
         }
+        // this.setState({
+        //   data: response.data,
+        // });
       })
       .catch((response) => {
         console.log(response);
       });
-    //   // } else {
-    //   //   this.validator.showMessages();
-    //   //   // rerender to show messages for the first time
-    //   //   // you can use the autoForceUpdate option to do this automatically`
-    //   //   this.forceUpdate();
-    //   // }
-    // };
   };
 
   columns = [
@@ -113,14 +121,14 @@ class ListUsersContainer extends React.Component {
         <Space size="middle">
           <Button
             type="primary"
-            //   onClick={() => edit(id)}
+            onClick={() => this.edit(record)}
             shape="circle"
             icon={<EditOutlined />}
           />
 
           <Button
             type="primary"
-            // onClick={() => onDelete(id)}
+            onClick={() => this.onDelete(record.id)}
             shape="circle"
             icon={<DeleteOutlined />}
           />
@@ -128,12 +136,6 @@ class ListUsersContainer extends React.Component {
       ),
     },
   ];
-  showModal = () => {
-    console.log(this.props);
-    this.setState({
-      visible: true,
-    });
-  };
 
   render() {
     return (
