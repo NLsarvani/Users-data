@@ -23,72 +23,37 @@ class AddUserContainer extends React.Component {
     this.validator = new SimpleReactValidator();
   }
 
-  componentDidUpdate(prevProps, previousState) {
-    console.log(prevProps, this.props);
-    console.log(previousState, this.state);
-
-    if (
-      // this.props.data.user_data.fname !== "" &&
-      prevProps.data.user_data.fname !== this.props.data.user_data.fname &&
-      this.props.data.user_data.lname !== prevProps.data.user_data.lname &&
-      this.props.data.user_data.fname !== ""
-    ) {
-      console.log("YEss");
-      const { fname, lname, email, country, state } = this.props.data.user_data;
-      this.setState({
-        fname: fname,
-        lname: lname,
-        email: email,
-        country: country,
-        state: state,
-        all_countries: this.all_countries,
-        states: this.all_states[country],
-      });
-    } else if (
-      prevProps.data.user_data.fname !== "" &&
-      this.props.data.user_data.fname === ""
-    ) {
-      console.log("came");
+  componentDidMount() {
+    if (this.props.user_data) {
+      const { id, fname } = this.props.user_data;
+      this.setState({ fname: fname });
     }
   }
-  // shouldComponentUpdate(nextprops, nextState) {
-  //   console.log(nextprops, nextState);
-  //   console.log(this.props, this.state);
-  //   // console.log(
-  //   //   this.props.data.user_data.fname,
-  //   //   nextprops.data.user_data.fname
-  //   // );
-  //   if (
-  //     // JSON.stringify(this.props.data) === JSON.stringify(prevProps.data) &&
-  //     nextprops.data.user_data.fname !== this.props.data.user_data.fname ||
-  //     nextState.fname !== ""
-  //     // this.props.data.user_data.lname !== nextprops.data.user_data.lname
-  //     //   &&
-  //     // this.props.data.visible === prevProps.data.visible
-  //   ) {
-  //     console.log("YEss");
-  //     const { fname, lname, email, country, state } = nextprops.data.user_data;
-  //     this.setState({
-  //       fname: fname,
-  //       lname: lname,
-  //       email: email,
-  //       country: country,
-  //       state: state,
-  //       all_countries: this.all_countries,
-  //       states: this.all_states[country],
-  //     });
-  //     return true;
-  //   } else {
-  //     console.log(
-  //       nextprops.data.user_data.fname !== this.props.data.user_data.fname,
-  //       nextState.fname !== ""
-  //     );
-  //     return true;
-  //   }
-  // }
+
+  // shouldComponentUpdate() {
+  //   console.log("shouldComponentUpdate");
+  //   return true;
   // }
 
+  componentDidUpdate(prevProps, previousState) {
+    const { user_data } = this.props;
+
+    if (user_data !== null && user_data !== prevProps.user_data) {
+      const { id, fname } = this.props.user_data;
+      this.setState({ fname }, () => {
+        console.log(this.state);
+      });
+    } else {
+      if (user_data !== prevProps.user_data) {
+        this.setState({ fname: "" });
+      }
+    }
+  }
+
   handleOk = (e) => {
+    const { fname } = this.state;
+    this.validator.message("fname", fname, "required");
+
     if (this.validator.allValid()) {
       const { fname, lname, email, country, state } = this.state;
       const { toggleModal, addUser } = this.props;
@@ -162,9 +127,9 @@ class AddUserContainer extends React.Component {
           handleInput={this.handleInput}
           selectCountry={this.selectCountry}
           selectState={this.selectState}
-          visible={this.props.data.visible}
-          validator={this.validator}
-          user_data={this.props.data.user_data}
+          visible={this.props.visible}
+          validator={this.validator.getErrorMessages()}
+          user_data={this.props.user_data}
         />
       </div>
     );
@@ -173,3 +138,69 @@ class AddUserContainer extends React.Component {
 // }
 
 export default AddUserContainer;
+
+/*
+    if (
+      this.props.user_data &&
+      prevProps.user_data &&
+      prevProps.user_data.fname !== this.props.user_data.fname &&
+      this.props.user_data.lname !== prevProps.user_data.lname &&
+      this.props.user_data.fname !== ""
+    ) {
+      console.log("YEss");
+      const { fname, lname, email, country, state } = this.props.data.user_data;
+      this.setState({
+        fname: fname,
+        lname: lname,
+        email: email,
+        country: country,
+        state: state,
+        all_countries: this.all_countries,
+        states: this.all_states[country],
+      });
+    } else if (
+      prevProps.user_data &&
+      this.props.user_data &&
+      prevProps.user_data.fname !== "" &&
+      this.props.user_data.fname === ""
+    ) {
+      console.log("came");
+    }
+    */
+
+// shouldComponentUpdate(nextprops, nextState) {
+//   console.log(nextprops, nextState);
+//   console.log(this.props, this.state);
+//   // console.log(
+//   //   this.props.data.user_data.fname,
+//   //   nextprops.data.user_data.fname
+//   // );
+//   if (
+//     // JSON.stringify(this.props.data) === JSON.stringify(prevProps.data) &&
+//     nextprops.data.user_data.fname !== this.props.data.user_data.fname ||
+//     nextState.fname !== ""
+//     // this.props.data.user_data.lname !== nextprops.data.user_data.lname
+//     //   &&
+//     // this.props.data.visible === prevProps.data.visible
+//   ) {
+//     console.log("YEss");
+//     const { fname, lname, email, country, state } = nextprops.data.user_data;
+//     this.setState({
+//       fname: fname,
+//       lname: lname,
+//       email: email,
+//       country: country,
+//       state: state,
+//       all_countries: this.all_countries,
+//       states: this.all_states[country],
+//     });
+//     return true;
+//   } else {
+//     console.log(
+//       nextprops.data.user_data.fname !== this.props.data.user_data.fname,
+//       nextState.fname !== ""
+//     );
+//     return true;
+//   }
+// }
+// }

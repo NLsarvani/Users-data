@@ -15,7 +15,7 @@ class ListUsersContainer extends React.Component {
     data: [],
     visible: false,
   };
-  usersData = [];
+  // usersData = [];
 
   componentDidMount() {
     this.getUserData();
@@ -37,7 +37,7 @@ class ListUsersContainer extends React.Component {
     const { visible } = this.state;
     this.setState({ visible: !visible });
 
-    if (visible === false) {
+    if (!visible) {
       this.setState({
         user_data: null,
       });
@@ -143,21 +143,24 @@ class ListUsersContainer extends React.Component {
       ),
     },
   ];
-  edit = (e) => {
+  edit = (record) => {
     const { visible } = this.state;
-    let { user_data } = this.state;
-    user_data = e;
+    // let { user_data } = this.state;
+    // user_data = record;
     this.setState({
-      user_data,
+      user_data: record,
       visible: !visible,
     });
   };
 
   render() {
+    const { user_data, visible } = this.state;
+    console.log(user_data);
     return (
       <div>
         <AddUserContainer
-          data={this.state}
+          user_data={user_data}
+          visible={visible}
           toggleModal={this.toggleModal}
           addUser={this.addUser}
         />

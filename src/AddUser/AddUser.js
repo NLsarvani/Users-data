@@ -14,6 +14,7 @@ const AddUser = ({
   validator,
   user_data,
 }) => {
+  console.log(validator);
   const { Option } = Select;
   const layout = {
     labelCol: {
@@ -43,9 +44,9 @@ const AddUser = ({
             <Form.Item
               label="First Name"
               className="form-group"
-              rules={[
-                { required: true, message: "Please input your first name!" },
-              ]}
+              hasFeedback
+              validateStatus={validator.fname && "error"}
+              help={validator.fname}
             >
               <Input
                 className="form-control"
@@ -55,14 +56,14 @@ const AddUser = ({
                 value={data.fname}
                 required
               />
-              {validator.message("first name", data.fname, "required|alpha")}
+              {/* {validator.message("first name", data.fname, "required|alpha")} */}
             </Form.Item>
             <Form.Item
               label="Last Name"
               className="form-group"
-              rules={[
-                { required: true, message: "Please input your lastname!" },
-              ]}
+              // rules={[
+              //   { required: true, message: "Please input your lastname!" },
+              // ]}
             >
               <Input
                 className="form-control"
@@ -71,12 +72,12 @@ const AddUser = ({
                 onChange={handleInput}
                 value={data.lname}
               />
-              {validator.message("last name", data.lname, "required|alpha")}
+              {/* {validator.message("last name", data.lname, "required|alpha")} */}
             </Form.Item>
             <Form.Item
               label="Email"
               className="form-group"
-              rules={[{ required: true, message: "Please input your email!" }]}
+              // rules={[{ required: true, message: "Please input your email!" }]}
             >
               <Input
                 className="form-control"
@@ -84,15 +85,15 @@ const AddUser = ({
                 name="email"
                 onChange={handleInput}
                 value={data.email}
-                onBlur={() => validator.showMessageFor("email")}
+                // onBlur={() => validator.showMessageFor("email")}
               />
-              {validator.message("email", data.email, "required|email")}
+              {/* {validator.message("email", data.email, "required|email")} */}
             </Form.Item>
 
             <Form.Item
               label="Country"
               className="form-group"
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
             >
               <Select
                 showSearch
@@ -109,7 +110,7 @@ const AddUser = ({
                   </Option>
                 ))}
               </Select>
-              {validator.message("country", data.country, "required")}
+              {/* {validator.message("country", data.country, "required")} */}
             </Form.Item>
             <Form.Item
               label="State"
@@ -128,7 +129,7 @@ const AddUser = ({
                   </Option>
                 ))}
               </Select>
-              {validator.message("State", data.state, "required")}
+              {/* {validator.message("State", data.state, "required")} */}
             </Form.Item>
           </Form>
         </Modal>
