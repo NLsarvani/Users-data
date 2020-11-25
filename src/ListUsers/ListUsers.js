@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Modal, Row, Col } from "antd";
+import { Table, Button, Row, Col } from "antd";
 
 import "./ListUsers.css";
 

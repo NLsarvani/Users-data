@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Input, Button, Form, Select, Modal } from "antd";
+import { Input, Form, Select, Modal } from "antd";
 
 import "./AddUser.css";
 
@@ -23,6 +23,7 @@ const AddUser = ({
       span: 16,
     },
   };
+
   return (
     <div>
       <div>
@@ -41,7 +42,6 @@ const AddUser = ({
           >
             <Form.Item
               label="First Name"
-              name="fname"
               className="form-group"
               rules={[
                 { required: true, message: "Please input your first name!" },
@@ -52,13 +52,13 @@ const AddUser = ({
                 placeholder="Add First Name"
                 name="fname"
                 onChange={handleInput}
-                // value={user_data.fname}
+                value={data.fname}
+                required
               />
               {validator.message("first name", data.fname, "required|alpha")}
             </Form.Item>
             <Form.Item
               label="Last Name"
-              name="lname"
               className="form-group"
               rules={[
                 { required: true, message: "Please input your lastname!" },
@@ -68,14 +68,13 @@ const AddUser = ({
                 className="form-control"
                 placeholder="Add Last Name"
                 name="lname"
-                // value={user_data.lname}
                 onChange={handleInput}
+                value={data.lname}
               />
               {validator.message("last name", data.lname, "required|alpha")}
             </Form.Item>
             <Form.Item
               label="Email"
-              name="email"
               className="form-group"
               rules={[{ required: true, message: "Please input your email!" }]}
             >
@@ -83,14 +82,14 @@ const AddUser = ({
                 className="form-control"
                 placeholder="Add email"
                 name="email"
-                // value={user_data.email}
                 onChange={handleInput}
+                value={data.email}
+                onBlur={() => validator.showMessageFor("email")}
               />
-              {validator.message("email", data.email, "required")}
+              {validator.message("email", data.email, "required|email")}
             </Form.Item>
 
             <Form.Item
-              name="country"
               label="Country"
               className="form-group"
               rules={[{ required: true }]}
@@ -101,7 +100,7 @@ const AddUser = ({
                 optionFilterProp="children"
                 defaultValue={data.country}
                 onChange={selectCountry}
-                // value={user_data.country}
+                value={data.country}
                 style={{ width: "100%" }}
               >
                 {data.all_countries.map((country) => (
@@ -113,15 +112,14 @@ const AddUser = ({
               {validator.message("country", data.country, "required")}
             </Form.Item>
             <Form.Item
-              name="state"
               label="State"
               className="form-group"
               rules={[{ required: true }]}
             >
               <Select
-                onChange={selectState}
                 defaultValue={data.state}
-                // value={user_data.state}
+                onChange={selectState}
+                value={data.state}
                 style={{ width: "100%" }}
               >
                 {data.states.map((city) => (

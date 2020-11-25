@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Button, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Popconfirm, message } from "antd";
 
 import "antd/dist/antd.css";
 
@@ -44,22 +45,12 @@ class ListUsersContainer extends React.Component {
   };
 
   addUser = (newUser) => {
-    const { data } = this.state;
+    const data = [...this.state.data];
     data.push(newUser);
     this.setState({
       data,
     });
     return true;
-  };
-
-  edit = (e) => {
-    const { visible } = this.state;
-    let { user_data } = this.state;
-    user_data = e;
-    this.setState({
-      user_data,
-      visible: !visible,
-    });
   };
 
   onDelete = (user_id) => {
@@ -73,6 +64,7 @@ class ListUsersContainer extends React.Component {
           this.setState({
             data: updateData,
           });
+          message.success("Deleted Successfully");
         }
         // this.setState({
         //   data: response.data,
@@ -83,6 +75,14 @@ class ListUsersContainer extends React.Component {
       });
   };
 
+  confirm = (user_id) => {
+    this.onDelete(user_id);
+  };
+
+  cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   columns = [
     {
       title: "S.No. ",
@@ -125,17 +125,33 @@ class ListUsersContainer extends React.Component {
             shape="circle"
             icon={<EditOutlined />}
           />
-
-          <Button
-            type="primary"
-            onClick={() => this.onDelete(record.id)}
-            shape="circle"
-            icon={<DeleteOutlined />}
-          />
+          <Popconfirm
+            title="Are you sure to delete the User?"
+            onConfirm={() => this.confirm(record.id)}
+            onCancel={() => this.cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              type="primary"
+              // onClick={() => this.onDelete(record.id)}
+              shape="circle"
+              icon={<DeleteOutlined />}
+            />{" "}
+          </Popconfirm>
         </Space>
       ),
     },
   ];
+  edit = (e) => {
+    const { visible } = this.state;
+    let { user_data } = this.state;
+    user_data = e;
+    this.setState({
+      user_data,
+      visible: !visible,
+    });
+  };
 
   render() {
     return (
