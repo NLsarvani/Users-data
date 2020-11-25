@@ -31,7 +31,7 @@ class AddUserContainer extends React.Component {
       // this.props.data.user_data.fname !== "" &&
       prevProps.data.user_data.fname !== this.props.data.user_data.fname &&
       this.props.data.user_data.lname !== prevProps.data.user_data.lname &&
-      this.props.data.user_data.fname !== ""
+      this.props.data.user_data.fname !== null
     ) {
       console.log("YEss");
       const { fname, lname, email, country, state } = this.props.data.user_data;
