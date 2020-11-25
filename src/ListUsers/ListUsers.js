@@ -1,11 +1,10 @@
 import React from "react";
-import { Table, Button, Modal, Row, Col } from "antd";
+import { Table, Button, Row, Col } from "antd";
 
 import "./ListUsers.css";
 
 const ListUsers = (props) => {
   const { toggleModal } = props;
-
   return (
     <Row>
       <Col span="2"></Col>
@@ -13,6 +12,9 @@ const ListUsers = (props) => {
         <Button className="adduser" type="primary" onClick={toggleModal}>
           Add User
         </Button>
+        {/* <Space>
+          <Spin size="large" />
+        </Space> */}
         <Table
           columns={props.columns}
           dataSource={props.data}
