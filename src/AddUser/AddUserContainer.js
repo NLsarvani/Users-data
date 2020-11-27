@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import SimpleReactValidator from "simple-react-validator";
+import { Alert, message } from "antd";
 
 import AddUser from "./AddUser";
 import countries from "../countries.json";
@@ -13,106 +14,163 @@ class AddUserContainer extends React.Component {
     fname: "",
     lname: "",
     email: "",
-    all_countries: this.all_countries,
+    countries: this.all_countries,
     states: this.all_states[this.all_countries[0]],
     country: this.all_countries[0],
     state: this.all_states[this.all_countries[0]][0],
+    message: null,
+    // err: true,
   };
+
   constructor(props) {
     super(props);
     this.validator = new SimpleReactValidator();
   }
 
-  componentDidUpdate(prevProps, previousState) {
-    console.log(prevProps, this.props);
-    console.log(previousState, this.state);
-
-    if (
-      // this.props.data.user_data.fname !== "" &&
-      prevProps.data.user_data.fname !== this.props.data.user_data.fname &&
-      this.props.data.user_data.lname !== prevProps.data.user_data.lname &&
-      this.props.data.user_data.fname !== null
-    ) {
-      console.log("YEss");
-      const { fname, lname, email, country, state } = this.props.data.user_data;
+  componentDidMount() {
+    if (this.props.user_data) {
+      const {
+        id,
+        fname,
+        lname,
+        email,
+        state,
+        country,
+        countries,
+        states,
+      } = this.props.user_data;
       this.setState({
         fname: fname,
         lname: lname,
         email: email,
         country: country,
         state: state,
-        all_countries: this.all_countries,
-        states: this.all_states[country],
+        [countries]: this.all_countries,
+        [states]: this.all_states[country],
       });
-    } else if (
-      prevProps.data.user_data.fname !== "" &&
-      this.props.data.user_data.fname === ""
-    ) {
-      console.log("came");
     }
   }
-  // shouldComponentUpdate(nextprops, nextState) {
-  //   console.log(nextprops, nextState);
-  //   console.log(this.props, this.state);
-  //   // console.log(
-  //   //   this.props.data.user_data.fname,
-  //   //   nextprops.data.user_data.fname
-  //   // );
-  //   if (
-  //     // JSON.stringify(this.props.data) === JSON.stringify(prevProps.data) &&
-  //     nextprops.data.user_data.fname !== this.props.data.user_data.fname ||
-  //     nextState.fname !== ""
-  //     // this.props.data.user_data.lname !== nextprops.data.user_data.lname
-  //     //   &&
-  //     // this.props.data.visible === prevProps.data.visible
-  //   ) {
-  //     console.log("YEss");
-  //     const { fname, lname, email, country, state } = nextprops.data.user_data;
-  //     this.setState({
-  //       fname: fname,
-  //       lname: lname,
-  //       email: email,
-  //       country: country,
-  //       state: state,
-  //       all_countries: this.all_countries,
-  //       states: this.all_states[country],
-  //     });
-  //     return true;
-  //   } else {
-  //     console.log(
-  //       nextprops.data.user_data.fname !== this.props.data.user_data.fname,
-  //       nextState.fname !== ""
-  //     );
-  //     return true;
-  //   }
-  // }
-  // }
+
+  componentDidUpdate(prevProps, previousState) {
+    const { user_data } = this.props;
+    if (user_data !== null && user_data !== prevProps.user_data) {
+      const {
+        id,
+        fname,
+        lname,
+        email,
+        state,
+        country,
+        countries,
+        states,
+      } = this.props.user_data;
+      this.setState(
+        {
+          id,
+          fname,
+          lname,
+          email,
+          state,
+          country,
+          [countries]: this.all_countries,
+          [states]: this.all_states[country],
+        },
+        () => {}
+      );
+    } else {
+      if (user_data !== prevProps.user_data) {
+        this.setState({
+          fname: "",
+          lname: "",
+          email: "",
+          countries: this.all_countries,
+          states: this.all_states[this.all_countries[0]],
+          country: this.all_countries[0],
+          state: this.all_states[this.all_countries[0]][0],
+        });
+      }
+    }
+  }
 
   handleOk = (e) => {
+    const { fname, lname, email, country, state } = this.state;
+    console.log(
+      this.validator.message("fname", fname, "required") ? "success" : "error"
+    );
+    this.validator.message("fname", fname, "required");
+    this.validator.message("lname", lname, "required");
+    this.validator.message("email", email, "required|email");
+
     if (this.validator.allValid()) {
-      const { fname, lname, email, country, state } = this.state;
       const { toggleModal, addUser } = this.props;
       const newUser = {
-        // id: data.length + 1,
         fname: fname,
         lname: lname,
         email: email,
         country: country,
         state: state,
       };
-      // post user details to the api to store in data
       axios
         .post("http://localhost:4000/users", newUser)
         .then((response) => {
+          console.log(response);
           if (response.status === 201) {
-            // Push the user and close the modal window
             let d = addUser(response.data);
             if (d) {
               this.setState({
                 fname: "",
                 lname: "",
                 email: "",
-                all_countries: this.all_countries,
+                countries: this.all_countries,
+                states: this.all_states[this.all_countries[0]],
+                country: this.all_countries[0],
+                state: this.all_states[this.all_countries[0]][0],
+              });
+              // toggleModal();
+            }
+          }
+        })
+        .catch((response) => {
+          if (response.request.status === 500) {
+            this.setState({
+              message: { type: "error", message: "Something went wrong" },
+            });
+          }
+          console.log(response.request);
+        });
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+  };
+
+  save = (e) => {
+    const { id, fname, lname, email, country, state } = this.state;
+    this.validator.message("fname", fname, "required");
+    this.validator.message("lname", lname, "required");
+    this.validator.message("email", email, "required");
+
+    if (this.validator.allValid()) {
+      const { toggleModal, updateUser } = this.props;
+      const newUser = {
+        fname: fname,
+        lname: lname,
+        email: email,
+        country: country,
+        state: state,
+      };
+      axios
+        .patch(`http://localhost:4000/users/${id}`, newUser)
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            let d = updateUser(response.data);
+            if (d) {
+              this.setState({
+                fname: "",
+                lname: "",
+                email: "",
+                countries: this.all_countries,
                 states: this.all_states[this.all_countries[0]],
                 country: this.all_countries[0],
                 state: this.all_states[this.all_countries[0]][0],
@@ -126,8 +184,6 @@ class AddUserContainer extends React.Component {
         });
     } else {
       this.validator.showMessages();
-      // rerender to show messages for the first time
-      // you can use the autoForceUpdate option to do this automatically`
       this.forceUpdate();
     }
   };
@@ -152,7 +208,7 @@ class AddUserContainer extends React.Component {
   };
 
   render() {
-    const { toggleModal } = this.props;
+    const { toggleModal, user_data, visible } = this.props;
     return (
       <div>
         <AddUser
@@ -162,9 +218,10 @@ class AddUserContainer extends React.Component {
           handleInput={this.handleInput}
           selectCountry={this.selectCountry}
           selectState={this.selectState}
-          visible={this.props.data.visible}
-          validator={this.validator}
-          user_data={this.props.data.user_data}
+          visible={visible}
+          validator={this.validator.getErrorMessages()}
+          user_data={user_data}
+          save={this.save}
         />
       </div>
     );

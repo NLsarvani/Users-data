@@ -1,10 +1,12 @@
-.adduser{
-/* display: flex; */
-/* margin: auto;
-margin-top: 20px;
-float: left; */
-margin: 20px 10px 0px;
-float: right;
-/* margin-bottom:
-/* margin-bottom: -49px; */
+/* .adduser {
+  margin: 20px 10px 0px;
+  float: right;
+} */
+.spinner {
+  margin-top: 15%;
+}
+.user {
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }

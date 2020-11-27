@@ -1,5 +1,6 @@
 import React from "react";
 import { Input, Form, Select, Modal } from "antd";
+import { Alert, message } from "antd";
 
 import "./AddUser.css";
 
@@ -13,8 +14,20 @@ const AddUser = ({
   visible,
   validator,
   user_data,
+  save,
 }) => {
   const { Option } = Select;
+  const {
+    fname,
+    lname,
+    email,
+    countries,
+    states,
+    state,
+    country,
+    message,
+  } = data;
+
   const layout = {
     labelCol: {
       span: 6,
@@ -26,113 +39,114 @@ const AddUser = ({
 
   return (
     <div>
-      <div>
-        <Modal
-          title="Add User"
-          visible={visible}
-          onOk={handleOk}
-          onCancel={toggleModal}
+      <Modal
+        title="Add User"
+        visible={visible}
+        onOk={user_data === null ? handleOk : save}
+        onCancel={toggleModal}
+        maskClosable={false}
+      >
+        {message !== null ? (
+          <Alert
+            className="alert"
+            message={message.message}
+            type={message.type}
+            showIcon
+          />
+        ) : (
+          ""
+        )}
+        <Form
+          {...layout}
+          name="basic"
+          initialValues={{
+            remember: true,
+          }}
         >
-          <Form
-            {...layout}
-            name="basic"
-            initialValues={{
-              remember: true,
-            }}
+          <Form.Item
+            label="First Name"
+            className="form-group"
+            hasFeedback
+            validateStatus={validator.fname && "error"}
+            help={validator.fname}
           >
-            <Form.Item
-              label="First Name"
-              className="form-group"
-              rules={[
-                { required: true, message: "Please input your first name!" },
-              ]}
-            >
-              <Input
-                className="form-control"
-                placeholder="Add First Name"
-                name="fname"
-                onChange={handleInput}
-                value={data.fname}
-                required
-              />
-              {validator.message("first name", data.fname, "required|alpha")}
-            </Form.Item>
-            <Form.Item
-              label="Last Name"
-              className="form-group"
-              rules={[
-                { required: true, message: "Please input your lastname!" },
-              ]}
-            >
-              <Input
-                className="form-control"
-                placeholder="Add Last Name"
-                name="lname"
-                onChange={handleInput}
-                value={data.lname}
-              />
-              {validator.message("last name", data.lname, "required|alpha")}
-            </Form.Item>
-            <Form.Item
-              label="Email"
-              className="form-group"
-              rules={[{ required: true, message: "Please input your email!" }]}
-            >
-              <Input
-                className="form-control"
-                placeholder="Add email"
-                name="email"
-                onChange={handleInput}
-                value={data.email}
-                onBlur={() => validator.showMessageFor("email")}
-              />
-              {validator.message("email", data.email, "required|email")}
-            </Form.Item>
+            <Input
+              className="form-control"
+              placeholder="Add First Name"
+              name="fname"
+              onChange={handleInput}
+              value={fname}
+              required
+            />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            className="form-group"
+            hasFeedback
+            validateStatus={validator.lname && "error"}
+            help={validator.lname}
+          >
+            <Input
+              className="form-control"
+              placeholder="Add Last Name"
+              name="lname"
+              onChange={handleInput}
+              value={lname}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            className="form-group"
+            hasFeedback
+            validateStatus={validator.email && "error"}
+            help={validator.email}
+          >
+            <Input
+              className="form-control"
+              placeholder="Add email"
+              name="email"
+              onChange={handleInput}
+              value={email}
+            />
+          </Form.Item>
 
-            <Form.Item
-              label="Country"
-              className="form-group"
-              rules={[{ required: true }]}
+          <Form.Item label="Country" className="form-group">
+            <Select
+              showSearch
+              placeholder="Select a person"
+              optionFilterProp="children"
+              defaultValue={country}
+              onChange={selectCountry}
+              value={country}
+              style={{ width: "100%" }}
             >
-              <Select
-                showSearch
-                placeholder="Select a person"
-                optionFilterProp="children"
-                defaultValue={data.country}
-                onChange={selectCountry}
-                value={data.country}
-                style={{ width: "100%" }}
-              >
-                {data.all_countries.map((country) => (
-                  <Option key={country} className="form-control">
-                    {country}
-                  </Option>
-                ))}
-              </Select>
-              {validator.message("country", data.country, "required")}
-            </Form.Item>
-            <Form.Item
-              label="State"
-              className="form-group"
-              rules={[{ required: true }]}
+              {countries.map((country) => (
+                <Option key={country} className="form-control">
+                  {country}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="State"
+            className="form-group"
+            rules={[{ required: true }]}
+          >
+            <Select
+              defaultValue={state}
+              onChange={selectState}
+              value={state}
+              style={{ width: "100%" }}
             >
-              <Select
-                defaultValue={data.state}
-                onChange={selectState}
-                value={data.state}
-                style={{ width: "100%" }}
-              >
-                {data.states.map((city) => (
-                  <Option key={city} className="form-control">
-                    {city}
-                  </Option>
-                ))}
-              </Select>
-              {validator.message("State", data.state, "required")}
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
+              {states.map((city) => (
+                <Option key={city} className="form-control">
+                  {city}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
